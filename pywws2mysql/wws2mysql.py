@@ -19,9 +19,6 @@
 	along with this program; if not, write to the Free Software
 	Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-"""
-
-"""
 	Name: wwsSQL.py
 	Programteil: Uses jim-easterbrook/pywws to interface with a USB Weterstation and writes data to MySQL Database.
 	Thema: See- und Wetterueberwachung
@@ -29,44 +26,35 @@
 	Version: 0.0.4 open Alpha fuer Python2.7
 """
 
-__usage__ = """ This is a Test """
-
-#__doc__ %= __usage__
-#__usage__ = __doc__.split('\n')[0] + __usage__
+__usage__ = """ Uses jim-easterbrook/pywws to interface with a USB Weterstation and writes data to MySQL Database. """
 
 import syslog
 import ConfigParser, os
 import sys
 import time
 import datetime
-#from datetime import datetime
 from datetime import timedelta
 from pywws import WeatherStation
 from mysql_interface import mysql_interface as db
-#from pywws import DataStore
 
-
-#debug
 import pprint
 
 def WeatherStation_init():
 	""" create kumunication Object für WeatherStation."""
-	#global ws
 	try:
 		ws = WeatherStation.weather_station()
 	except:
-		#print( "WS conection error" )
 		raise NameError("WS conection error")
 	return (ws)
 	
 def WeatherStation_synctime(ws):
 	""" Time synkronisiren mit WS. Achtung kann bis zu 10min dauern!""" 
 	for data, last_ptr, logged in ws.live_data(True):
-		last_date = data['idx'] # Zeitstempel des eintrages
+		last_date = data['idx'] # Timestemp of entry
 		if logged:
 			pprint.pprint( data) 
 			break
-	# secunden auf 0 setzen
+	# set secunden to 0
 	last_date.replace(second=0)
 	return (last_date)
 	
@@ -76,8 +64,6 @@ def WeatherStation_fixed_block(ws):
 	
 def WeatherStation_ptr_pos(fixb):
 	""" Liest Fixblock aus und giebt die Anzahl gepeischerter Datensetze zurück."""
-	# debug
-	#print str( fixb['current_pos'] ) + " : " + str( ws.current_pos() )
 	return (fixb['current_pos'] )
 
 def verify_wws2db_timing(wws_time, last_db_time, tolerance):
@@ -88,24 +74,13 @@ def verify_wws2db_timing(wws_time, last_db_time, tolerance):
 		return True
 	else:
 		return False
-	      
-#def verify_wws2db_timing_zero(wws_time, last_db_time):
-#	""" """
-#	wws_time.replace(second=0)
-#	last_db_time.replace(second=0)
-		
+
 def get_last_db_entry(sqldb, table):
-	""" Liest den letzen eintrag aus der Datenbank.
-	#Giebt None zurück fals keine einträge vorhanden."""
-	# identifizire nummer des letzden eintrages
-	#last_row= sqldb.dict_read( table, returnmode='rowcount')
-	#if(last_row != 0):
-	#	sqldb.dict_read( table, key='ID', operator='=', value=str(last_row), returnmode='fetchone')
-	#return 
+	""" Reads last entery from Database. If no entry exixts function returns None.""" 
 	return (sqldb.dict_read( table, key='ID', operator='=', value='MAX(id)', returnmode='fetchone'))
 	
-def write_to_file(filepath,fixb, all_data):
-	""" Schreibe daten zu text Datei"""
+def write_to_file(filepath, fixb, all_data):
+	""" Write Data to text file."""
 	filepath= "out.txt"
 	file = open( filepath, 'w')
 	file.write( "# WS Data: " + fixb['date_time'] + "\n\n" )

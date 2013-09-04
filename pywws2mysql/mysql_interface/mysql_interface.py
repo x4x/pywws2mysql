@@ -19,9 +19,6 @@
 	along with this program; if not, write to the Free Software
 	Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-"""
-
-"""
 	Name: mysql_interface.py
 	Programteil: Module to interface with MySQL
 	Thema: See- und Wetterueberwachung
@@ -36,18 +33,17 @@ import time
 import sys
 
 def del_dict_None_values( dict_a):
-	""" Entfernt alle eintrege aus dicht die Value None haben."""
+	""" Removes all enterris off dict with None Values."""
 	del_list = []
 	for k, v in dict_a.iteritems():
 		if v is None:
 			del_list.append(k)
-			#del dict_b[k]
 	for k in del_list:
 		del dict_a[k]
 	return dict_a
 		
 def datetime_to_db_str( time_date_a):
-	""" Zeit und Datum fon datetime Objekt in Datenbankformat umwandeln."""
+	""" Convert time and date from datime Object to MySQL time string."""
 	return time_date_a.strftime("%Y-%m-%d %H:%M:%S")
 
 def dict_datetime_to_db_str( dict_a):
@@ -127,8 +123,6 @@ class mysql_interface(object):
 		sql_insert = "INSERT INTO %s( %s ) VALUES ( %s );"
 		
 		# test if keys in table
-		
-		#sql_insert = sql_insert % ( table, ', '.join(insert_dict.keys()), str(insert_dict.values())[1:-1] )
 		try:
 			self.cursor.execute( sql_insert % ( table, ', '.join(insert_dict.keys()), str(insert_dict.values())[1:-1] ) )
 		except:
@@ -143,8 +137,6 @@ class mysql_interface(object):
 		new_dict= del_dict_None_values( insert_dict)
 		print(id(new_dict))
 		new_dict= dict_datetime_to_db_str( new_dict)
-		#print (insert_dict)
-		#self.insert(table, insert_dict)
 		self.insert(table, new_dict)
 	
 	def read(self, table, key='', operator='', value='', returnmode='fetchall' ):
@@ -198,16 +190,11 @@ class mysql_interface(object):
 		read_list= self.read( table, key, operator, value, returnmode )
 		
 		dict_a= {}
-		#line_len= len(struckt_list)
-		#rows_len= len(read_list) / line_len
+		
 		rows_len= len(read_list)
 		#testen ob struktur und rows gleich lang sind
 		if(len(struckt_list) == len(read_list[0])):
-			#read_list_start=0
 			for current_row_numb in xrange(0, rows_len):
-				#read_list_end= read_list_start + line_len
-				#dict_a[current_row_numb]= dict(zip( struckt_list, read_list[read_list_start:read_list_end] ))
-				#read_list_start+= line_len
 				dict_a[current_row_numb]= dict(zip( struckt_list, read_list[current_row_numb]))
 		else:
 			raise NameError("Structure and Values does not match!")
@@ -218,7 +205,6 @@ class mysql_interface(object):
 		try:
 			self.__mysqldb_a.commit()
 		except:
-			#print("error")
 			raise NameError("Commit Error!!")
 	
 	def get_line(self, table, line_num):
@@ -239,7 +225,6 @@ class mysql_interface(object):
 		try:
 			self.cursor.execute(sql_del)
 		except:
-			#print("del error!!")
 			raise NameError("del error!!")
 			pass 
 	
@@ -267,17 +252,6 @@ class mysql_interface(object):
 				raise NameError(err)
 		self.cursor = self.__mysqldb_a.cursor()
 		
-		
-class mysql_interface_crator(mysql_interface):
-	""" Erweiterung fon mysql_interface. Besitzt zusetzlich funktionen zum erstellen von db strukturen und tabllen."""
-	
-	def create_table(self, table_name):
-		sql_create= "CREATE TABLE %s ( %s )" % table_name
-		try:
-			pass
-		except:
-			pass
-
 
 def main():
 	""" Test for mysql_interface.py. """
