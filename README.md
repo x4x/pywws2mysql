@@ -1,6 +1,6 @@
 # pywws2mysql
 
-Extension for jim-easterbrook/pywws to use MySQL as Database.
+Extension for [jim-easterbrook/pywws](../jim-easterbrook/pywws) to use MySQL as Database.
 
 
 ## Installation
