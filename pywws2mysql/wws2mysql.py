@@ -187,7 +187,10 @@ def main():
 		block['idz'] = last_date 
 		
 		# determinant current end of ring buffer
-		ptr_stop= ws.inc_ptr(r_pos)
+		if(last_entry == [0,1,2,3,4,datetime.datetime(1970,1,1,0,0,0),6,7,8,9,10,360,360]):
+			ptr_stop = 256
+		else:
+			ptr_stop = ws.inc_ptr(r_pos)
 		
 		# read ring buffer
 		while (r_pos_a != ptr_stop) and (last_date > last_entry[5]):
