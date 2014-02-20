@@ -187,7 +187,7 @@ def main():
 		block['idz'] = last_date 
 		
 		# determinant current end of ring buffer
-		if(last_entry == [0,1,2,3,4,datetime.datetime(1970,1,1,0,0,0),6,7,8,9,10,360,360]):
+		if( ws.get_data( ws.inc_ptr(r_pos), unbuffered=False )['delay'] is None ):
 			ptr_stop = 256
 		else:
 			ptr_stop = ws.inc_ptr(r_pos)
