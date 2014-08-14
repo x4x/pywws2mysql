@@ -98,6 +98,7 @@ def main():
 	
 	# db connection information
 	dbcon= {
+		'engine':config.get('mysql_db','engine')
 		'user': config.get('mysql_db', 'user'),
 		'password': config.get('mysql_db', 'password'),
 		'host': config.get('mysql_db', 'host'),
@@ -137,7 +138,7 @@ def main():
 	  # init database connection
 	  print("init database")
 	  try:
-	    sqldb = db.mysql_interface(dbcon['user'], dbcon['password'], dbcon['host'], dbcon['database'])
+	    sqldb = db.mysql_interface(dbcon['engine'] ,dbcon['user'], dbcon['password'], dbcon['host'], dbcon['database'])
 	  except:
 	    conection=True
 	    print("db conection error!")
