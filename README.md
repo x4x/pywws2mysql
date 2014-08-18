@@ -1,6 +1,6 @@
 # pywws2mysql
 
-Write Data from [jim-easterbrook/pywws](http://jim-easterbrook.github.com/pywws/) to a Database.
+Write Data from Wireless WeatherStations with [jim-easterbrook/pywws](http://jim-easterbrook.github.com/pywws/) to a Database.
 
 
 ## Installation
@@ -14,7 +14,7 @@ Install required aptitude packages:
 Now use a Database like MySQL and create user and a table for the weather data with Create.sql.
 Configure all Database access credentials in the wws2mysql.ini file.
 Write a Crontab entry to start pywws2mysql automatically.
-```*/12 * * * * python2.7 /opt/pywws2mysql/pywws2mysql.py > /dev/null*/12 * * * * python2.7 /opt/pywws2mysql/pywws2mysql.py > /dev/null ```
+```*/12 * * * * python2.7 /opt/pywws2mysql/pywws2mysql.py > /dev/null ```
 
 If you use a other user then root create a udev rule. e.g.:
 ```
