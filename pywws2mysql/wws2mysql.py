@@ -35,7 +35,8 @@ import time
 import datetime
 from datetime import timedelta
 from pywws import WeatherStation
-from mysql_interface import mysql_interface as db
+#from mysql_interface import mysql_interface as db
+from mysql_interface import db_interface as db
 
 import pprint
 
@@ -98,7 +99,7 @@ def main():
 	
 	# db connection information
 	dbcon= {
-		'engine':config.get('mysql_db','engine')
+		'engine':config.get('mysql_db','engine'),
 		'user': config.get('mysql_db', 'user'),
 		'password': config.get('mysql_db', 'password'),
 		'host': config.get('mysql_db', 'host'),

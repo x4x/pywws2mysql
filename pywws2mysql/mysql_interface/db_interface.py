@@ -58,15 +58,6 @@ def dict_datetime_to_db_str( dict_a):
 
 class mysql_interface(object):
 
-        db__config = {
-                'user': None,
-                'password': None,
-                'host': None,
-                'database': None,
-                'raise_on_warnings': True,
-                'raw': False,
-                'buffered': True
-        }
 		
 	def get_db_table_structure(self, table):
 		""" Get the structur of the table as a dict with options."""
@@ -97,21 +88,24 @@ class mysql_interface(object):
 			self.cursor.execute(sql_read_last)
 			
 		except:
-			raise NameError("read_last Error!!")	
+			raise NameError("read_last Error!!")
+
+                        # Workaround for PostgresSQL
+                        #return None
 		return ( self.cursor.fetchone())
 		#return ( self.cursor.fetchall())
 		
 	def insert(self, table, insert_dict):
-		""" Insert data in to a table from an dict. 
+                """ Insert data in to a table from an dict. 
 		All Values in the dicht should be Strings and the Keys, Value order is importend."""
-		sql_insert = "INSERT INTO %s( %s ) VALUES ( %s );"
-		
-		# test if keys in table
+                sql_insert = "INSERT INTO %s( %s ) VALUES ( %s );"
+                
+                # test if keys in table
 		try:
-			self.cursor.execute( sql_insert % ( table, ', '.join(insert_dict.keys()), str(insert_dict.values())[1:-1] ) )
+                        self.cursor.execute( sql_insert % ( table, ', '.join(insert_dict.keys()), str(insert_dict.values())[1:-1] ) )
+
 		except:
-			raise NameError("Insert Error! Dataset probably already existing!")
-		
+                        raise NameError("Insert Error! Dataset probably already existing!")
 			
 	def insert_in_db(self, table, insert_dict):
 		""" Insert data in to a table from an dict.
@@ -218,24 +212,22 @@ class mysql_interface(object):
 	
         def __init__(self, engine, user, password, host, database, raise_on_warnings = True):
                 """ Init the database comunication with options. Creates a cursor with olso can used from autseid the object. """
-                self.db_config['user'] = user
-                self.db_config['password'] = password
-                self.db_config['host'] = host
-                self.db_config['database'] = database
-                self.db_config['raise_on_warnings'] = bool(raise_on_warnings)
 
                 # set db engine
                 db = importlib.import_module( engine )
 
+                self.__mysqldb_a = db.connect(user= user, password=password, host=host, database= database)
+
+                """
                 try:
-                        self.__mysqldb_a = db.connect(**self.db_config)
+                        self.__mysqldb_a = db.connect(user= user, password=password, host=host, database= database, raise_on_warnings=raise_on_warnings)
                 except db.Error as err:
                         if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
                                 raise NameError("Something is wrong your username or password")
                         elif err.errno == errorcode.ER_BAD_DB_ERROR:
                                 raise NameError("Database does not exists")
                         else:
-                                raise NameError(err)
+                                raise NameError(err)"""
                 self.cursor = self.__mysqldb_a.cursor()
 		
 

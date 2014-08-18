@@ -1,5 +1,5 @@
 /* ***************************************************************************
-	Module to interface with MySQL
+	Module to interface with PostgreSQL
     Copyright (C) 2013 	x4x 	georg.la8585@gmx.at
 
     This program is free software; you can redistribute it and/or
@@ -19,23 +19,28 @@
 ***************************************************************************** */
 
 
-USE wwsdb;
+--USE wwsdb;
+\c wwsdb
 
 DROP TABLE wwsdb;
+DROP TABLE wwsdb_id_seq;
 
 CREATE table wwsdb
-( ID			INTEGER 	Primary Key	AUTO_INCREMENT
- ,abs_pressure	FLOAT(4,1) 	COMMENT '[hpa]'
- ,delay			SMALLINT	UNSIGNED COMMENT '[min] Debug: Delay aus dem idz errechnet.'
- ,hum_in		SMALLINT(3) UNSIGNED COMMENT '[%]'
- ,hum_out 		SMALLINT(3) UNSIGNED COMMENT '[%]'
- ,idz			datetime	DEFAULT '0000-00-00 00:00:00'	not null	UNIQUE	COMMENT '[UTC] Zeit und Datum der Messung.'
- ,ptr			SMALLINT	UNSIGNED COMMENT '[byte] Position in wws Ringpuffer'
- ,rain			FLOAT		COMMENT '[mm]'
- ,status		SMALLINT	COMMENT '[] Debug: uneuesed'
- ,temp_in		FLOAT(4,1)	COMMENT '[°C]'
- ,temp_out		FLOAT(4,1)	COMMENT '[°C]'
- ,wind_ave		FLOAT(5,2)	COMMENT '[mph]'
- ,wind_dir		SMALLINT 	UNSIGNED COMMENT '[*30°] 0=N; 0bis12 je 30°; 134=NULL'
- ,wind_gust		FLOAT(5,1)	COMMENT '[mph]'
+( ID                    SERIAL         Primary Key
+ ,abs_pressure		numeric      
+ ,delay                 SMALLINT
+ ,hum_in                SMALLINT 
+ ,hum_out               SMALLINT 
+ ,idz                   TIMESTAMP          not null        UNIQUE  
+ ,ptr                   INTEGER      
+ ,rain                  numeric           
+ ,status                SMALLINT        
+ ,temp_in               numeric     
+ ,temp_out              numeric      
+ ,wind_ave              numeric      
+ ,wind_dir              SMALLINT   
+ ,wind_gust             numeric      
 );
+
+GRANT ALL ON wwsdb TO pywws;
+GRANT ALL ON wwsdb_id_seq TO pywws;
