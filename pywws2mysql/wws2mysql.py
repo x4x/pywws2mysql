@@ -35,7 +35,8 @@ import time
 import datetime
 from datetime import timedelta
 from pywws import WeatherStation
-from mysql_interface import mysql_interface as db
+#from mysql_interface import mysql_interface as db
+from mysql_interface import db_interface as db
 
 import pprint
 
@@ -98,6 +99,7 @@ def main():
 	
 	# db connection information
 	dbcon= {
+		'engine':config.get('mysql_db','engine'),
 		'user': config.get('mysql_db', 'user'),
 		'password': config.get('mysql_db', 'password'),
 		'host': config.get('mysql_db', 'host'),
@@ -137,7 +139,7 @@ def main():
 	  # init database connection
 	  print("init database")
 	  try:
-	    sqldb = db.mysql_interface(dbcon['user'], dbcon['password'], dbcon['host'], dbcon['database'])
+	    sqldb = db.mysql_interface(dbcon['engine'] ,dbcon['user'], dbcon['password'], dbcon['host'], dbcon['database'])
 	  except:
 	    conection=True
 	    print("db conection error!")
@@ -234,12 +236,17 @@ def main():
 			max_data += 1
 
 
-		# write data to db	
+		# write data to db
+		print("writing to DB")	
 		# daten in umgekerter reienfolge in db schreiben.  damit sie cronologisch richtig sind mit der id.
 		i = len(all_data) -2 # maximale anzahl zu syncronisirenden daten
 		# -1 wegen 0 zehlbeginn; -1 wegen bereitz in db vorhandenen datensatz
 		while (i >= 0):
-			print i
+			print(i)
+			# round long floats
+                        for k in all_data[i]:
+                                if(isinstance(all_data[i][k], float) ):
+					all_data[i][k]= round(all_data[i][k], 2)
 			# insert in db
 			print (all_data[i])
 			sqldb.insert_in_db( dbcon['table'], all_data[i])
