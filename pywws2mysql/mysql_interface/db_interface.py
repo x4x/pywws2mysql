@@ -111,9 +111,9 @@ class mysql_interface(object):
 		""" Insert data in to a table from an dict.
 		Slower and Recomendet. Bereitet dict zum screiben in die db auf."""
 		
-		print(id(insert_dict))
+		#print(id(insert_dict))
 		new_dict= del_dict_None_values( insert_dict)
-		print(id(new_dict))
+		#print(id(new_dict))
 		new_dict= dict_datetime_to_db_str( new_dict)
 		self.insert(table, new_dict)
 	

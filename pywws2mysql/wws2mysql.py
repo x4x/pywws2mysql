@@ -236,12 +236,17 @@ def main():
 			max_data += 1
 
 
-		# write data to db	
+		# write data to db
+		print("writing to DB")	
 		# daten in umgekerter reienfolge in db schreiben.  damit sie cronologisch richtig sind mit der id.
 		i = len(all_data) -2 # maximale anzahl zu syncronisirenden daten
 		# -1 wegen 0 zehlbeginn; -1 wegen bereitz in db vorhandenen datensatz
 		while (i >= 0):
-			print i
+			print(i)
+			# round long floats
+                        for k in all_data[i]:
+                                if(isinstance(all_data[i][k], float) ):
+					all_data[i][k]= round(all_data[i][k], 2)
 			# insert in db
 			print (all_data[i])
 			sqldb.insert_in_db( dbcon['table'], all_data[i])
