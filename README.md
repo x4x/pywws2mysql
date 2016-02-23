@@ -1,6 +1,6 @@
 # pywws2mysql
 
-Write Data from Wireless WeatherStations with [jim-easterbrook/pywws](http://jim-easterbrook.github.com/pywws/) to a Database.
+Write Data from Wireless WeatherStations with [jim-easterbrook/pywws](http://github.com/jim-easterbrook/pywws) to a Database.
 
 
 ## Installation
